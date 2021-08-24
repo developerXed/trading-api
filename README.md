@@ -12,4 +12,4 @@ npm run start
     BTC ="BTC",
     ETC ="ETC"
 
-    for Selected price
+    for Selected price# crypto-porfolio-compare

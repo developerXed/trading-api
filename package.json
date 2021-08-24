@@ -1,7 +1,7 @@
 {
-  "name": "2b-boilerplate",
+  "name": "Crypto Pro",
   "version": "1.0.0",
-  "description": "_We're looking at your programming ability. It must not only work, it should be maintainable._",
+  "description": "Crypto Pro",
   "main": "index.js",
   "scripts": {
     "start": "tsc && node build/index.js",

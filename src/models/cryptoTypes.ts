@@ -9,7 +9,6 @@ export enum TokenValue {
     ETC ="ETC"
   }
   
-
   export interface Token {
     timestamp?:string;
     transaction_type?:string;
