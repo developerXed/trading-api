@@ -1,0 +1,20 @@
+{
+  "name": "2b-boilerplate",
+  "version": "1.0.0",
+  "description": "_We're looking at your programming ability. It must not only work, it should be maintainable._",
+  "main": "index.js",
+  "scripts": {
+    "start": "tsc && node build/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "csv-parser": "^3.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.6.1",
+    "typescript": "^4.3.5"
+  }
+}
