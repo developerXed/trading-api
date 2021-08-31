@@ -1,28 +1,42 @@
-import csv from "csv-parser";
-import * as fs from "fs";
-import { getCryptoComparePrices } from "./services/cryptopriceService";
-import { TokenValue,  TransactionType, Token, CryptoPrice } from "./models/cryptoTypes";
 
-const portfolioAmount: number[] = [];
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import * as authService from "./services/authService";
+import * as depositOrderController from "./controllers/depositOrdersController";
+import * as balanceAndOrdersController from "./controllers/balanceAndOrdersController"
 
-fs.createReadStream('data/transactions.csv')
-  .pipe(csv())
-  .on('data', (row: Token) => {
-        if (row.transaction_type === TransactionType.WITHDRAWAL && row.token === TokenValue.XRP) {
-            portfolioAmount.push(+row.amount);
-        }
-  })
-  .on('end', () => {
-    calculatePortfolio();
-    console.log('CSV file successfully processed');
-  });
+const app = express();
+const port = 3003;
 
-async function calculatePortfolio(){
-    let cryptoPrice = await getCryptoComparePrices()
-    cryptoPrice =  cryptoPrice.find((prices: CryptoPrice) => prices.value === TokenValue.XRP)
-    const currentPricePortfolio: number = portfolioAmount.reduce((a: number, b: number) => a + b * cryptoPrice.price, 0);
+app.use(cors());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
 
-  console.log("USD", currentPricePortfolio.toFixed(2));
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
+mongoose.Promise = global.Promise;
+mongoose.connect("mongodb+srv://edi:testpassword@cluster0.9x3yu.mongodb.net/metamask-api?retryWrites=true&w=majority", { useUnifiedTopology: true, useNewUrlParser: true });
+
+app.post('/auth', authService.authenticateUser);
+app.post('/deposit', authService.verifyToken, depositOrderController.depositAmount)
+app.post('/place-order', authService.verifyToken, depositOrderController.placeOrder)
+app.get('/get-balances', authService.verifyToken, balanceAndOrdersController.getBalances)
+app.get('/get-order', authService.verifyToken, balanceAndOrdersController.getOrders);
+app.post('/cancel-order', authService.verifyToken, depositOrderController.cancelOrder);
+
+try {
+    app.listen(port, (): void => {
+        console.log(`Connected successfully on port ${port}`);
+    });
+} catch (error) {
 }
+
 
