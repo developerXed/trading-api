@@ -13,3 +13,4 @@ npm run start
     ETC ="ETC"
 
     for Selected price# crypto-porfolio-compare
+# trading-api
